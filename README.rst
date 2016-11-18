@@ -1,18 +1,18 @@
-redis-py
+redispy
 ========
 
 The Python interface to the Redis key-value store.
 
-.. image:: https://secure.travis-ci.org/andymccurdy/redis-py.png?branch=master
-        :target: http://travis-ci.org/andymccurdy/redis-py
+.. image:: https://secure.travis-ci.org/jamiecressey/redispy.png?branch=master
+        :target: http://travis-ci.org/jamiecressey/redispy
 
 Installation
 ------------
 
-redis-py requires a running Redis server. See `Redis's quickstart
+redispy requires a running Redis server. See `Redis's quickstart
 <http://redis.io/topics/quickstart>`_ for installation instructions.
 
-To install redis-py, simply:
+To install redispy, simply:
 
 .. code-block:: bash
 
@@ -47,13 +47,13 @@ API Reference
 -------------
 
 The `official Redis command documentation <http://redis.io/commands>`_ does a
-great job of explaining each command in detail. redis-py exposes two client
+great job of explaining each command in detail. redispy exposes two client
 classes that implement these commands. The StrictRedis class attempts to adhere
 to the official command syntax. There are a few exceptions:
 
 * **SELECT**: Not implemented. See the explanation in the Thread Safety section
   below.
-* **DEL**: 'del' is a reserved keyword in the Python syntax. Therefore redis-py
+* **DEL**: 'del' is a reserved keyword in the Python syntax. Therefore redispy
   uses 'delete' instead.
 * **CONFIG GET|SET**: These are implemented separately as config_get or config_set.
 * **MULTI/EXEC**: These are implemented as part of the Pipeline class. The
@@ -66,7 +66,7 @@ to the official command syntax. There are a few exceptions:
   will return a PubSub instance where you can subscribe to channels and listen
   for messages. You can only call PUBLISH from the Redis client (see
   `this comment on issue #151
-  <https://github.com/andymccurdy/redis-py/issues/151#issuecomment-1545015>`_
+  <https://github.com/andymccurdy/redispy/issues/151#issuecomment-1545015>`_
   for details).
 * **SCAN/SSCAN/HSCAN/ZSCAN**: The \*SCAN commands are implemented as they
   exist in the Redis documentation. In addition, each command has an equivilant
@@ -76,7 +76,7 @@ to the official command syntax. There are a few exceptions:
 
 In addition to the changes above, the Redis class, a subclass of StrictRedis,
 overrides several other commands to provide backwards compatibility with older
-versions of redis-py:
+versions of redispy:
 
 * **LREM**: Order of 'num' and 'value' arguments reversed such that 'num' can
   provide a default value of zero.
@@ -93,7 +93,7 @@ More Detail
 Connection Pools
 ^^^^^^^^^^^^^^^^
 
-Behind the scenes, redis-py uses a connection pool to manage connections to
+Behind the scenes, redispy uses a connection pool to manage connections to
 a Redis server. By default, each Redis instance you create will in turn create
 its own connection pool. You can override this behavior and use an existing
 connection pool by passing an already created connection pool instance to the
@@ -109,7 +109,7 @@ connections are managed.
 Connections
 ^^^^^^^^^^^
 
-ConnectionPools manage a set of Connection instances. redis-py ships with two
+ConnectionPools manage a set of Connection instances. redispy ships with two
 types of Connections. The default, Connection, is a normal TCP socket based
 connection. The UnixDomainSocketConnection allows for clients running on the
 same device as the server to connect via a unix domain socket. To use a
@@ -138,8 +138,8 @@ Parsers
 ^^^^^^^
 
 Parser classes provide a way to control how responses from the Redis server
-are parsed. redis-py ships with two parser classes, the PythonParser and the
-HiredisParser. By default, redis-py will attempt to use the HiredisParser if
+are parsed. redispy ships with two parser classes, the PythonParser and the
+HiredisParser. By default, redispy will attempt to use the HiredisParser if
 you have the hiredis module installed and will fallback to the PythonParser
 otherwise.
 
@@ -150,7 +150,7 @@ performance increase is most noticeable when retrieving many pieces of data,
 such as from LRANGE or SMEMBERS operations.
 
 Hiredis is available on PyPI, and can be installed via pip or easy_install
-just like redis-py.
+just like redispy.
 
 .. code-block:: bash
 
@@ -196,7 +196,7 @@ database remains selected until another is selected or until the connection is
 closed. This creates an issue in that connections could be returned to the pool
 that are connected to a different database.
 
-As a result, redis-py does not implement the SELECT command on client
+As a result, redispy does not implement the SELECT command on client
 instances. If you use multiple Redis databases within the same application, you
 should create a separate client instance (and possibly a separate connection
 pool) for each database.
@@ -327,7 +327,7 @@ which is much easier to read:
 Publish / Subscribe
 ^^^^^^^^^^^^^^^^^^^
 
-redis-py includes a `PubSub` object that subscribes to channels and listens
+redispy includes a `PubSub` object that subscribes to channels and listens
 for new messages. Creating a `PubSub` object is easy.
 
 .. code-block:: pycon
@@ -399,7 +399,7 @@ Unsubscribing works just like subscribing. If no arguments are passed to
     >>> p.get_message()
     {'channel': 'my-*', 'data': 0L, 'pattern': None, 'type': 'punsubscribe'}
 
-redis-py also allows you to register callback functions to handle published
+redispy also allows you to register callback functions to handle published
 messages. Message handlers take a single argument, the message, which is a
 dictionary just like the examples above. To subscribe to a channel or pattern
 with a message handler, pass the channel or pattern name as a keyword argument
@@ -464,7 +464,7 @@ application.
     >>>         # do something with the message
     >>>     time.sleep(0.001)  # be nice to the system :)
 
-Older versions of redis-py only read messages with `pubsub.listen()`. listen()
+Older versions of redispy only read messages with `pubsub.listen()`. listen()
 is a generator that blocks until a message is available. If your application
 doesn't need to do anything else but receive and act on messages received from
 redis, listen() is an easy way to get up an running.
@@ -486,7 +486,7 @@ loop.
 
 Note: Since we're running in a separate thread, there's no way to handle
 messages that aren't automatically handled with registered message handlers.
-Therefore, redis-py prevents you from calling `run_in_thread()` if you're
+Therefore, redispy prevents you from calling `run_in_thread()` if you're
 subscribed to patterns or channels that don't have message handlers attached.
 
 .. code-block:: pycon
@@ -522,9 +522,9 @@ cannot be delivered. When you're finished with a PubSub object, call its
 LUA Scripting
 ^^^^^^^^^^^^^
 
-redis-py supports the EVAL, EVALSHA, and SCRIPT commands. However, there are
+redispy supports the EVAL, EVALSHA, and SCRIPT commands. However, there are
 a number of edge cases that make these commands tedious to use in real world
-scenarios. Therefore, redis-py exposes a Script object that makes scripting
+scenarios. Therefore, redispy exposes a Script object that makes scripting
 much easier to use.
 
 To create a Script instance, use the `register_script` function on a client
@@ -550,7 +550,7 @@ function. Script instances accept the following optional arguments:
 * **keys**: A list of key names that the script will access. This becomes the
   KEYS list in LUA.
 * **args**: A list of argument values. This becomes the ARGV list in LUA.
-* **client**: A redis-py Client or Pipeline instance that will invoke the
+* **client**: A redispy Client or Pipeline instance that will invoke the
   script. If client isn't specified, the client that intiially
   created the Script instance (the one that `register_script` was
   invoked from) will be used.
@@ -597,11 +597,11 @@ execution.
 Sentinel support
 ^^^^^^^^^^^^^^^^
 
-redis-py can be used together with `Redis Sentinel <http://redis.io/topics/sentinel>`_
+redispy can be used together with `Redis Sentinel <http://redis.io/topics/sentinel>`_
 to discover Redis nodes. You need to have at least one Sentinel daemon running
-in order to use redis-py's Sentinel support.
+in order to use redispy's Sentinel support.
 
-Connecting redis-py to the Sentinel instance(s) is easy. You can use a
+Connecting redispy to the Sentinel instance(s) is easy. You can use a
 Sentinel connection to discover the master and slaves network addresses:
 
 .. code-block:: pycon
@@ -644,7 +644,7 @@ Scan Iterators
 ^^^^^^^^^^^^^^
 
 The \*SCAN commands introduced in Redis 2.8 can be cumbersome to use. While
-these commands are fully supported, redis-py also exposes the following methods
+these commands are fully supported, redispy also exposes the following methods
 that return Python iterators for convenience: `scan_iter`, `hscan_iter`,
 `sscan_iter` and `zscan_iter`.
 
@@ -661,8 +661,9 @@ that return Python iterators for convenience: `scan_iter`, `hscan_iter`,
 Author
 ^^^^^^
 
-redis-py is developed and maintained by Andy McCurdy (sedrik@gmail.com).
-It can be found here: http://github.com/andymccurdy/redis-py
+redispy is developed and maintained by Jamie Cressey based on
+the original redis-py work by Andy McCurdy (sedrik@gmail.com).
+It can be found here: http://github.com/jamiecressey/redispy
 
 Special thanks to:
 
