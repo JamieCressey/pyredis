@@ -32,15 +32,15 @@ long_description = f.read()
 f.close()
 
 setup(
-    name='redis',
+    name='redispy',
     version=__version__,
     description='Python client for Redis key-value store',
     long_description=long_description,
-    url='http://github.com/andymccurdy/redis-py',
-    author='Andy McCurdy',
-    author_email='sedrik@gmail.com',
-    maintainer='Andy McCurdy',
-    maintainer_email='sedrik@gmail.com',
+    url='http://github.com/jamiecressey/redispy',
+    author='Jamie Cressey',
+    author_email='jamiecressey89@gmail.com',
+    maintainer='Jamie Cressey',
+    maintainer_email='jamiecressey89@gmail.com',
     keywords=['Redis', 'key-value store'],
     license='MIT',
     packages=['redis'],

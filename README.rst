@@ -3,8 +3,8 @@ redispy
 
 The Python interface to the Redis key-value store.
 
-.. image:: https://secure.travis-ci.org/jamiecressey/redispy.png?branch=master
-        :target: http://travis-ci.org/jamiecressey/redispy
+.. image:: https://travis-ci.org/JamieCressey/redispy.svg?branch=master
+    :target: https://travis-ci.org/JamieCressey/redispy
 
 Installation
 ------------
@@ -16,13 +16,13 @@ To install redispy, simply:
 
 .. code-block:: bash
 
-    $ sudo pip install redis
+    $ sudo pip install redispy
 
 or alternatively (you really should be using pip though):
 
 .. code-block:: bash
 
-    $ sudo easy_install redis
+    $ sudo easy_install redispy
 
 or from source:
 
