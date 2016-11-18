@@ -18,6 +18,7 @@ class SlaveNotFoundError(ConnectionError):
 
 
 class SentinelManagedConnection(Connection):
+
     def __init__(self, **kwargs):
         self.connection_pool = kwargs.pop('connection_pool')
         super(SentinelManagedConnection, self).__init__(**kwargs)

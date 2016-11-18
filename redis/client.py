@@ -314,7 +314,7 @@ def parse_georadius_generic(response, **options):
         # with other command arguments.
         return response
 
-    if type(response) != list:
+    if not isinstance(response, list):
         response_list = [response]
     else:
         response_list = response
@@ -443,7 +443,7 @@ class StrictRedis(object):
             'CLUSTER SETSLOT': bool_ok,
             'CLUSTER SLAVES': parse_cluster_nodes,
             'GEOPOS': lambda r: list(map(lambda ll: (float(ll[0]),
-                                         float(ll[1])), r)),
+                                                     float(ll[1])), r)),
             'GEOHASH': lambda r: list(map(nativestr, r)),
             'GEORADIUS': parse_georadius_generic,
             'GEORADIUSBYMEMBER': parse_georadius_generic,
@@ -571,7 +571,7 @@ class StrictRedis(object):
         value_from_callable = kwargs.pop('value_from_callable', False)
         watch_delay = kwargs.pop('watch_delay', None)
         with self.pipeline(True, shard_hint) as pipe:
-            while 1:
+            while True:
                 try:
                     if watches:
                         pipe.watch(*watches)
@@ -2556,6 +2556,7 @@ class PubSub(object):
 
 
 class PubSubWorkerThread(threading.Thread):
+
     def __init__(self, pubsub, sleep_time, daemon=False):
         super(PubSubWorkerThread, self).__init__()
         self.daemon = daemon

@@ -119,6 +119,7 @@ class BaseParser(object):
 
 
 class SocketBuffer(object):
+
     def __init__(self, socket, socket_read_size):
         self._sock = socket
         self.socket_read_size = socket_read_size
@@ -300,6 +301,7 @@ class PythonParser(BaseParser):
 
 class HiredisParser(BaseParser):
     "Parser class for connections using Hiredis"
+
     def __init__(self, socket_read_size):
         if not HIREDIS_AVAILABLE:
             raise RedisError("Hiredis is not installed")
@@ -1070,6 +1072,7 @@ class BlockingConnectionPool(ConnectionPool):
         # not available.
         >>> pool = BlockingConnectionPool(timeout=5)
     """
+
     def __init__(self, max_connections=50, timeout=20,
                  connection_class=Connection, queue_class=LifoQueue,
                  **connection_kwargs):

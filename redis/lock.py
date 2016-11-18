@@ -14,6 +14,7 @@ class Lock(object):
     It's left to the user to resolve deadlock issues and make sure
     multiple clients play nicely together.
     """
+
     def __init__(self, redis, name, timeout=None, sleep=0.1,
                  blocking=True, blocking_timeout=None, thread_local=True):
         """
@@ -107,7 +108,7 @@ class Lock(object):
         stop_trying_at = None
         if blocking_timeout is not None:
             stop_trying_at = mod_time.time() + blocking_timeout
-        while 1:
+        while True:
             if self.do_acquire(token):
                 self.local.token = token
                 return True
